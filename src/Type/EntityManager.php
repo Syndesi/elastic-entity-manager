@@ -91,9 +91,7 @@ class EntityManager implements EntityManagerInterface
                     'id' => (string) $element->getIdentifier(),
                     'body' => [
                         'doc' => $properties,
-                        'upsert' => [
-                            'counter' => 1,
-                        ],
+                        'doc_as_upsert' => true,
                     ],
                 ]);
             }

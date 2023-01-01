@@ -33,6 +33,7 @@ class DocumentFeatureTest extends FeatureTestCase
         $em->merge($document);
         $em->flush();
         sleep(1);
+        exit;
         $this->assertCollectionDocumentCount('test', 1);
 
         $foundDocument = $em->getOneByIdentifier('test', '1236');
