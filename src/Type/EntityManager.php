@@ -77,6 +77,14 @@ class EntityManager implements EntityManagerInterface
             if (ActionType::CREATE === $actionElasticElement->getAction()) {
                 $properties = $element->getProperties();
                 unset($properties['_id']);
+                $this->logger?->debug(sprintf(
+                    "Creating element of type %s",
+                    get_class($element)
+                ), [
+                    'index' => $element->getIndex(),
+                    'identifier' => $element->getIdentifier(),
+                    'properties' => $properties,
+                ]);
                 $this->client->index([
                     'index' => $element->getIndex(),
                     'id' => (string) $element->getIdentifier(),
@@ -86,6 +94,14 @@ class EntityManager implements EntityManagerInterface
             if (ActionType::MERGE === $actionElasticElement->getAction()) {
                 $properties = $element->getProperties();
                 unset($properties['_id']);
+                $this->logger?->debug(sprintf(
+                    "Updating element of type %s",
+                    get_class($element)
+                ), [
+                    'index' => $element->getIndex(),
+                    'identifier' => $element->getIdentifier(),
+                    'properties' => $properties,
+                ]);
                 $this->client->update([
                     'index' => $element->getIndex(),
                     'id' => (string) $element->getIdentifier(),
@@ -96,6 +112,13 @@ class EntityManager implements EntityManagerInterface
                 ]);
             }
             if (ActionType::DELETE === $actionElasticElement->getAction()) {
+                $this->logger?->debug(sprintf(
+                    "Deleting element of type %s",
+                    get_class($element)
+                ), [
+                    'index' => $element->getIndex(),
+                    'identifier' => $element->getIdentifier(),
+                ]);
                 $this->client->delete([
                     'index' => $element->getIndex(),
                     'id' => (string) $element->getIdentifier(),
