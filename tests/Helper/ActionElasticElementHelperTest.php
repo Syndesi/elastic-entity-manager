@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Syndesi\ElasticEntityManager\Tests\Helper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Syndesi\ElasticDataStructures\Type\Document;
 use Syndesi\ElasticEntityManager\Helper\ActionElasticElementHelper;
@@ -13,7 +14,7 @@ use Syndesi\ElasticEntityManager\Type\ActionType;
 
 class ActionElasticElementHelperTest extends TestCase
 {
-    public function provideActionElasticElementWithType()
+    public static function provideActionElasticElementWithType()
     {
         return [
             [
@@ -23,9 +24,7 @@ class ActionElasticElementHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideActionElasticElementWithType
-     */
+    #[DataProvider("provideActionElasticElementWithType")]
     public function testGetTypeFromActionElasticElement(ActionElasticElement $object, ActionElasticElementType $expectedType): void
     {
         $foundType = ActionElasticElementHelper::getTypeFromActionElasticElement($object);

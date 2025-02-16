@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Syndesi\ElasticEntityManager\Tests\Helper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Syndesi\ElasticDataStructures\Type\Document;
 use Syndesi\ElasticEntityManager\Event\DocumentPostCreateEvent;
@@ -18,7 +19,7 @@ use Syndesi\ElasticEntityManager\Type\ActionType;
 
 class LifecycleEventHandlerTest extends TestCase
 {
-    public function provideTestCases()
+    public static function provideTestCases()
     {
         return [
             [
@@ -66,9 +67,7 @@ class LifecycleEventHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTestCases
-     */
+    #[DataProvider("provideTestCases")]
     public function testCases(ActionElasticElement $actionElasticElement, bool $isPre, array $expectedEvents): void
     {
         $actualEvents = LifecycleEventHelper::getLifecycleEventForElasticActionElement($actionElasticElement, $isPre);
