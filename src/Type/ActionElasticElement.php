@@ -11,7 +11,7 @@ class ActionElasticElement implements ActionElasticElementInterface
 {
     public function __construct(
         private readonly ActionType $actionType,
-        private readonly DocumentInterface $element
+        private readonly DocumentInterface $element,
     ) {
     }
 

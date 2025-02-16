@@ -6,6 +6,7 @@ namespace Syndesi\ElasticEntityManager\Type;
 
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\Exception\ClientResponseException;
+use Elastic\Elasticsearch\Response\Elasticsearch;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Syndesi\ElasticDataStructures\Contract\DocumentInterface;
@@ -13,6 +14,7 @@ use Syndesi\ElasticDataStructures\Type\Document;
 use Syndesi\ElasticEntityManager\Contract\EntityManagerInterface;
 use Syndesi\ElasticEntityManager\Event\PostFlushEvent;
 use Syndesi\ElasticEntityManager\Event\PreFlushEvent;
+use Syndesi\ElasticEntityManager\Exception\ElasticEntityManagerException;
 use Syndesi\ElasticEntityManager\Helper\LifecycleEventHelper;
 
 class EntityManager implements EntityManagerInterface
@@ -85,6 +87,9 @@ class EntityManager implements EntityManagerInterface
                     'identifier' => $element->getIdentifier(),
                     'properties' => $properties,
                 ]);
+                /**
+                 * @psalm-suppress ArgumentTypeCoercion
+                 */
                 $this->client->index([
                     'index' => $element->getIndex(),
                     'id' => (string) $element->getIdentifier(),
@@ -102,6 +107,9 @@ class EntityManager implements EntityManagerInterface
                     'identifier' => $element->getIdentifier(),
                     'properties' => $properties,
                 ]);
+                /**
+                 * @psalm-suppress ArgumentTypeCoercion
+                 */
                 $this->client->update([
                     'index' => $element->getIndex(),
                     'id' => (string) $element->getIdentifier(),
@@ -119,6 +127,9 @@ class EntityManager implements EntityManagerInterface
                     'index' => $element->getIndex(),
                     'identifier' => $element->getIdentifier(),
                 ]);
+                /**
+                 * @psalm-suppress ArgumentTypeCoercion
+                 */
                 $this->client->delete([
                     'index' => $element->getIndex(),
                     'id' => (string) $element->getIdentifier(),
@@ -145,10 +156,16 @@ class EntityManager implements EntityManagerInterface
     public function getOneByIdentifier(string $index, string $identifier): ?DocumentInterface
     {
         try {
+            /**
+             * @psalm-suppress InvalidArgument
+             */
             $res = $this->client->get([
                 'index' => $index,
                 'id' => $identifier,
             ]);
+            if (!($res instanceof Elasticsearch)) {
+                throw new ElasticEntityManagerException(sprintf("Elastic returned response of the type '%s', expected type 'Elasticsearch'.", get_class($res)));
+            }
             $res = $res->asArray();
         } catch (ClientResponseException $e) {
             return null;

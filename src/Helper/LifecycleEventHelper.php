@@ -45,9 +45,6 @@ class LifecycleEventHelper
                     $eventClass = $eventClass[$actionElasticElement->getAction()->name];
 
                     return [
-                        /**
-                         * @phpstan-ignore-next-line
-                         */
                         new $eventClass($actionElasticElement->getElement()),
                     ];
                 }
